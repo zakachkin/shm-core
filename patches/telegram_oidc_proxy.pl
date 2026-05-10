@@ -18,13 +18,13 @@ sub replace_once {
 replace_once(
     'Telegram OIDC auth URL',
     "    use URI::Escape qw( uri_escape );\n    my \$auth_url = sprintf(\n        'https://oauth.telegram.org/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s&nonce=%s&code_challenge=%s&code_challenge_method=S256',\n        uri_escape(\$client_id),\n",
-    "    use URI::Escape qw( uri_escape );\n    my \$auth_server = \$self->telegram_oidc_auth_server( profile => \$args{profile} );\n    my \$auth_url = sprintf(\n        '%s/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s&nonce=%s&code_challenge=%s&code_challenge_method=S256',\n        \$auth_server,\n        uri_escape(\$client_id),\n"
+    "    use URI::Escape qw( uri_escape );\n    my \$oidc_server = \$self->telegram_oidc_server( profile => \$args{profile} );\n    my \$auth_url = sprintf(\n        '%s/auth?client_id=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s&nonce=%s&code_challenge=%s&code_challenge_method=S256',\n        \$oidc_server,\n        uri_escape(\$client_id),\n"
 );
 
 replace_once(
-    'Telegram OIDC server helpers',
+    'Telegram OIDC server helper',
     "sub telegram_oidc_exchange_code {\n",
-    "sub telegram_oidc_server {\n    my \$self = shift;\n    my %args = (\n        profile => 'telegram_bot',\n        @_,\n    );\n\n    my \$profile = \$args{profile};\n    my \$config = \$self->config;\n    my \$profile_cfg = \$config->{\$profile} || {};\n\n    my \$server = \$profile_cfg->{oidc_server}\n        || \$profile_cfg->{oauth_server}\n        || \$config->{oidc_server}\n        || \$config->{oauth_server}\n        || 'https://oauth.telegram.org';\n\n    \$server =~ s{/*\$}{};\n\n    return \$server;\n}\n\nsub telegram_oidc_auth_server {\n    my \$self = shift;\n    my %args = (\n        profile => 'telegram_bot',\n        @_,\n    );\n\n    my \$profile = \$args{profile};\n    my \$config = \$self->config;\n    my \$profile_cfg = \$config->{\$profile} || {};\n\n    my \$server = \$profile_cfg->{oidc_auth_server}\n        || \$profile_cfg->{oauth_auth_server}\n        || \$config->{oidc_auth_server}\n        || \$config->{oauth_auth_server}\n        || \$self->telegram_oidc_server( profile => \$profile );\n\n    \$server =~ s{/*\$}{};\n\n    return \$server;\n}\n\nsub telegram_oidc_exchange_code {\n"
+    "sub telegram_oidc_server {\n    my \$self = shift;\n    my %args = (\n        profile => 'telegram_bot',\n        @_,\n    );\n\n    my \$profile = \$args{profile};\n    my \$config = \$self->config;\n    my \$profile_cfg = \$config->{\$profile} || {};\n\n    my \$server = \$profile_cfg->{oidc_server}\n        || \$profile_cfg->{oauth_server}\n        || \$config->{oidc_server}\n        || \$config->{oauth_server}\n        || 'https://oauth.telegram.org';\n\n    \$server =~ s{/*\$}{};\n\n    return \$server;\n}\n\nsub telegram_oidc_exchange_code {\n"
 );
 
 replace_once(
